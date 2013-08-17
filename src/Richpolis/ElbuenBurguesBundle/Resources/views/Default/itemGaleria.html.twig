@@ -1,0 +1,30 @@
+<div class="item clearfix">
+    <a href="#" class="close">Cerrar</a>
+    <div class="post_text grid_3">
+        <h3>{{entity.categoria}}</h3>
+        {{entity.descripcion | raw }}
+             <!--a href="#" id="next">Anterior</a>
+             <a href="#" id="prev">Proximo</a-->
+    </div>
+    <div class="flex-control">
+        
+    </div>
+    <div class="slideshow flexslider grid_9" style="overflow: hidden;">
+       <ul class="slides">
+        {% for galeria in galerias %}   
+        <li>
+          {%if galeria.tipoArchivo != link_video %}
+          <img src="{{galeria.webPath | apply_filter('galeria_imagen')}}" />
+          {%else%}
+            {{galeria.archivoView | raw }}
+          {%endif%}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+
+
+
+
+    </div>

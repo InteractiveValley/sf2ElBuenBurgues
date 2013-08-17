@@ -1,0 +1,31 @@
+<div id="platillos-load" style="display: none;">
+    <img src="/images/gallery_loading.gif"/>
+</div>  
+
+{%  if anterior is defined and anterior > 0 %}
+<img src="/images/arrow_left.png" id="platillos-anterior" onclick="javascript:paginaPlatillos('{{path('frontend_platillos')}}',{{anterior}})"/>
+{% else %}
+&nbsp;
+{% endif %}
+
+<ul class="menu-lista">
+       {% for platillo in pagination %}
+        <li class="menu-item ">
+            <div class="contenido-menu-item">
+                <h3>{{platillo.titulo}}</h3>
+                <p>{{platillo.descripcion | raw}}</p>
+            </div>
+            <div class="imagen-menu-item image-wrap">
+                <img src="{{platillo.thumbnailWebPath}}" widht="150" height="80"/>
+                <span onclick="javascript:imagenShow('{{platillo.webPath | apply_filter('platillos_imagen')}}', '{{platillo.titulo}}', '');" class="zoom-icon">&nbsp;</span>
+            </div>    
+        </li>
+       {%  endfor  %}
+    </ul>
+
+{%  if siguiente is defined and siguiente > 0 %}
+    <img src="/images/arrow_right.png" id="platillos-siguiente" onclick="javascript:paginaPlatillos('{{path('frontend_platillos')}}',{{siguiente}})"/>
+{% else %}
+    &nbsp;
+{% endif %}
+

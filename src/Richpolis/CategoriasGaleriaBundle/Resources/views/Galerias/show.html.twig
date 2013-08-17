@@ -1,0 +1,70 @@
+{% extends "BackendBundle::backend.html.twig" %}
+
+{% block menu_horizontal %}
+    {% include 'BackendBundle:Default:menu_horizontal.html.twig' with {'pagina': 'galerias'} %}
+{% endblock %}
+
+{% block body %}
+<h1>Galerias</h1>
+
+<table class="record_properties table table-bordered">
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ entity.id }}</td>
+        </tr>
+        <tr>
+            <th>Archivo</th>
+            <td>{%if entity.tipoArchivo != link_video %}
+                  <img src="{{entity.webPath | apply_filter('galeria_imagen')}}" />
+                {%else%}
+                  {{entity.archivoView | raw }}
+                {%endif%}
+            </td>
+        </tr>
+        <tr>
+            <th>Thumbnail</th>
+            <td>{{ entity.thumbnail }}</td>
+        </tr>
+        <tr>
+            <th>Posicion</th>
+            <td>{{ entity.posicion }}</td>
+        </tr>
+        <tr>
+            <th>Categoria_id</th>
+            <td>{{ entity.categoriaid }}</td>
+        </tr>
+        <tr>
+            <th>Activo</th>
+            <td>{{ entity.isactive }}</td>
+        </tr>
+        <tr>
+            <th>Creado</th>
+            <td>{{ entity.createdat|date('d/m/Y H:i') }}</td>
+        </tr>
+        <tr>
+            <th>Actualizado</th>
+            <td>{{ entity.updatedat|date('d/m/Y H:i') }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('galerias') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('galerias_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>
+        <form action="{{ path('galerias_delete', { 'id': entity.id }) }}" method="post">
+            {{ form_widget(delete_form) }}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+{% endblock %}

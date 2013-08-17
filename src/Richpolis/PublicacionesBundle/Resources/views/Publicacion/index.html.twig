@@ -1,0 +1,90 @@
+{% extends "BackendBundle::backend.html.twig" %}
+
+{% block menu_horizontal %}
+    {% include 'BackendBundle:Default:menu_horizontal.html.twig' with {'pagina': 'publicacion'} %}
+{% endblock %}
+
+{% block siderbar %}  
+    {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': 'platillos'} %}
+{% endblock %}    
+
+{% block body %}
+
+{% if app.request.page is not defined %}
+    {% set page=1 %}
+{% else %}
+    {% set page=app.request.page %}
+{% endif %}
+
+
+<h1>Platillos</h1>
+
+<table class="table table-hover records_list">
+    <thead>
+        <tr>
+            <th>Orden</th>
+            <th>Titulo</th>
+            <th>Descripcion</th>
+            <th>Imagen</th>
+            <th>Activo</th>
+            <th>Creado</th>
+            <th>Actualizado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for entity in pagination %}
+        <tr class="list-registro">
+            <td class="list-registro-posicion"><a href="{{ path('publicacion_show', { 'id': entity.id }) }}">{{ entity.posicion }}</a></td>
+            <td class="list-registro-titulo">{{ entity.titulo }}</td>
+            <td class="list-registro-descripcion">{{ entity.descripcion | raw }}</td>
+            <td class="list-registro-imagen">
+                <img src="{{ entity.thumbnailWebPath }}" style="max-height: 120px; max-width: 120px;"/>
+            </td>
+            <td>{{ entity.isactive | isActive | raw }}</td>
+            <td>{% if entity.createdat %}{{ entity.createdat|date('d-m-Y H:i:s') }}{% endif%}</td>
+            <td>{% if entity.updatedat %}{{ entity.updatedat|date('d-m-Y H:i:s') }}{% endif%}</td>
+            <td>
+                <ul class="nav">
+                    <li>
+                        <a class="btn btn-mini" href="{{ path('publicacion_show', { 'id': entity.id }) }}" title="Mostrar registro">
+                            <i class="icon-eye-open"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-mini" href="{{ path('publicacion_edit', { 'id': entity.id }) }}" title="Editar registro">
+                            <i class="icon-edit"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-mini" href="{{ path('publicacion_up', { 'id': entity.id ,'page': page}) }}" title="Subir registro">
+                            <i class="icon-hand-up"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-mini" href="{{ path('publicacion_down', { 'id': entity.id, 'page': page }) }}" title="Bajar registro">
+                            <i class="icon-hand-down"></i>
+                        </a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="row">
+        <div class="span4">    
+            <ul class="btn-group">
+                <li>
+                    <a class="btn btn-primary" href="{{ path('publicacion_new' )}}">
+                        Nueva platillo
+                    </a>
+                </li>
+             </ul>
+        </div>
+        <div class="span4">
+            <div class="navigation"> {{ knp_pagination_render(pagination) }} </div>
+        </div>   
+</div>
+
+{% endblock %}

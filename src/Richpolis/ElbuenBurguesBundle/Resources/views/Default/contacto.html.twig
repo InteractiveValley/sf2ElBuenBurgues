@@ -1,0 +1,90 @@
+{%if error is not defined%}
+    {%set error=false%}
+{%endif%}
+{%if ok is not defined%}
+    {%set ok=false%}
+{%endif%}
+{%if mensaje is not defined%}
+    {%set mensaje=""%}
+{%endif%}
+
+<div class="form">
+     <form onsubmit="return false;" action="{{path('frontend_contacto')}}" method="post" class="form-contacto {%if error == true%}invalid{%endif%} {%if ok == true%}sent{%endif%}" novalidate="novalidate">
+          <div>
+             {{ form_label(form.name) }}
+             <span class="form-contacto-control-wrap Name {%if form.name.vars.errors  | length > 0%}form-not-valid{%endif%}">
+                 {{ form_widget(form.name, {'attr': {'class': 'form-contacto-control form-text form-validates-as-required','size':'40','aria-requiered':'true'}}) }}
+             </span>
+             <span class="form-not-valid-tip-no-ajax"> 
+                 {{ form_errors(form.name) }}
+             </span>
+         </div>
+         <div>
+             {{ form_label(form.email) }}
+             <span class="form-contacto-control-wrap E-mail {%if form.email.vars.errors  | length > 0%}form-not-valid{%endif%}">
+                 {{ form_widget(form.email, {'attr': {'class': 'form-contacto-control form-text form-email form-validates-as-required form-validates-as-email','size':'40','aria-requiered':'true'}}) }}
+             </span>
+             <span class="form-not-valid-tip-no-ajax"> 
+                 {{ form_errors(form.email) }}
+             </span>    
+         </div>
+          <div>
+             {{ form_label(form.subject) }} 
+             <span class="form-contacto-control-wrap subject {%if form.subject.vars.errors  | length > 0%}form-not-valid{%endif%}">
+                 {{ form_widget(form.subject, {'attr': {'class': 'form-contacto-control form-text form-validates-as-required','size':'40','aria-requiered':'true'}}) }}
+             </span>
+             <span class="form-not-valid-tip-no-ajax"> 
+                 {{ form_errors(form.subject) }}
+             </span>
+         </div>
+         <div>
+             {{ form_label(form.telefono) }} 
+             <span class="form-contacto-control-wrap telefono {%if form.telefono.vars.errors  | length > 0%}form-not-valid{%endif%}">
+                 {{ form_widget(form.telefono, {'attr': {'class': 'form-contacto-control form-text form-validates-as-required','size':'40','aria-requiered':'true'}}) }}
+             </span>
+             <span class="form-not-valid-tip-no-ajax"> 
+                 {{ form_errors(form.telefono) }}
+             </span>
+         </div>    
+         <div>
+             {{ form_label(form.body) }}
+             <span class="form-contacto-control-wrap message {%if form.body.vars.errors  | length > 0%}form-not-valid{%endif%}">
+                 {{ form_widget(form.body, {'attr': {'class': 'form-contacto-control form-textarea form-validates-as-required','size':'40','aria-requiered':'true'}}) }}
+             </span>
+             <span class="form-not-valid-tip-no-ajax"> 
+                 {{ form_errors(form.body) }}
+             </span>
+         </div>
+         <div>
+             <input type="submit" value="Enviar" class="form-contacto-control form-submit">
+             <img class="ajax-loader" src="/images/ajax-loader.gif" alt="Enviando ..." style="visibility: hidden;">
+         </div>
+         {% if ok == true and error == false%}    
+         <div class="form-response-output form-mail-sent-ok">
+             {{mensaje}}
+         </div>
+         {% elseif ok == false and error == true %}
+         <div class="form-response-output form-mail-sent-ng form-validation-errors">
+             {{mensaje}}{{form_errors(form)}}
+         </div>    
+         {% else %}
+         <div class="form-response-output">
+             {{mensaje}}
+         </div>    
+         {% endif %}    
+         {{ form_rest(form) }}    
+     </form>
+ </div>
+<script>
+$(document).ready( function() {   
+    $("input.form-submit").click( function() {
+        $('img.ajax-loader').css({visibility: 'visible'});
+        $("img.ajax-loader").fadeIn("fast",function(){
+            $.post("{{path('frontend_contacto')}}",$("form.form-contacto").serialize(),
+            function(data){
+                $("#contacts").html(data).fadeIn("fast");
+            });    
+        });
+    });    
+});
+</script>

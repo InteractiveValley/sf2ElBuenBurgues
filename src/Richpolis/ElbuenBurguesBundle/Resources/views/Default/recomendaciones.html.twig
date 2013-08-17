@@ -1,0 +1,28 @@
+<div id="recomendaciones-load" style="display: none;">
+    <img src="/images/gallery_loading.gif"/>
+</div> 
+{%  if anterior is defined and anterior > 0 %}
+<img src="/images/arrow_left.png" id="recomendaciones-anterior" onclick="javascript:paginaRecomendaciones('{{path('frontend_recomendaciones',{'tipo': tipo_recomendaciones})}}',{{anterior}})"/>
+{% else %}
+&nbsp;
+{% endif %}
+
+{% for galeria in pagination %}
+<div class="thumb-2">
+    <a rel="prettyPhoto[pp_gal]" href="{{galeria.webPath}}" 
+       title="{{galeria.titulo}}"> 
+        <span class="overlay">{{galeria.titulo}}</span>
+        <img width="300" height="225" src="{{galeria.thumbnailWebPath}}" 
+             class="attachment-post-thumbnail wp-post-image" 
+             alt="{{galeria.titulo}}">																			
+    </a>
+    <h2></h2>
+</div>
+{% endfor %}
+
+{%  if siguiente is defined and siguiente > 0 %}
+<img src="/images/arrow_right.png" id="recomendaciones-siguiente" onclick="javascript:paginaRecomendaciones('{{path('frontend_recomendaciones',{'tipo': tipo_recomendaciones})}}',{{siguiente}})"/>
+{% else %}
+&nbsp;
+{% endif %}
+

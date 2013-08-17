@@ -1,0 +1,43 @@
+ {
+	captcha: null,
+	into: '.form',
+	{% if error == true%}
+        invalids: [
+            {% if form.name.vars.errors  | length > 0%}
+                {
+		into:'span.Name'
+		message: 'Error'
+                },
+            {%endif%}
+            {% if form.email.vars.errors  | length > 0%}
+                {
+		into:'span.Email'
+		message: 'Error'
+                },
+            {%endif%}
+            {% if form.subject.vars.errors  | length > 0%}
+                {
+		into:'span.subject'
+		message: 'Error'
+                },
+            {%endif%}    
+            {% if form.telefono.vars.errors  | length > 0%}
+                {
+		into:'span.telefono'
+		message: 'Error'
+                },
+            {%endif%}
+            {% if form.body.vars.errors  | length > 0%}
+                {
+		into:'span.body'
+		message: 'Error'
+                },
+            {%endif%}    
+            ]    
+        {% else %}
+        invalids: [
+        ]
+        {% endif %},
+	mailSent: {% if ok == true %}true{%else%}false{%endif%},
+        message:'{{mensaje}}'
+}

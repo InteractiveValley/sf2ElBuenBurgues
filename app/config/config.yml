@@ -1,0 +1,117 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+
+framework:
+    #esi:             ~
+    #translator:      { fallback: "%locale%" }
+    secret:          "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: "%kernel.debug%"
+    form:            true
+    csrf_protection: true
+    validation:      { enable_annotations: true }
+    templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
+    default_locale:  "%locale%"
+    trust_proxy_headers: false # Deprecated in 2.0; will be removed in 2.3 (used trusted_proxies instead)
+    trusted_proxies: ~
+    session:         ~
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+
+# Assetic Configuration
+assetic:
+    debug:          "%kernel.debug%"
+    use_controller: false
+    bundles:        [ ]
+    #java: /usr/bin/java
+    filters:
+        cssrewrite: ~
+        #closure:
+        #    jar: "%kernel.root_dir%/Resources/java/compiler.jar"
+        #yui_css:
+        #    jar: "%kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar"
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   "%database_driver%"
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
+        charset:  UTF8
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        auto_mapping: true
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: "%mailer_transport%"
+    host:      "%mailer_host%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
+    spool:     { type: memory }
+
+# GenemuFormBundle Configuracion
+genemu_form:
+    tinymce: ~
+    date: ~
+    file:
+        swf: /js/uploadify/uploadify.swf
+
+knp_paginator:
+    page_range: 5  # número de páginas que se muestran en el paginador
+
+    default_options:
+        # los siguientes tres parámetros permiten "traducir" el paginador
+        # puedes utilizar por ejemplo: 'pagina', 'ordenar' y 'direccion'
+        page_name:           page
+        sort_field_name:     sort
+        sort_direction_name: direction
+
+        # sólo incluir resultados diferentes (útil cuando haces consultas GROUP BY)
+        distinct: true
+
+    template:
+        # estas opciones configuran la plantilla utilizada para la paginación
+        # y para los controles que premiten reordenar los resultados
+        pagination: KnpPaginatorBundle:Pagination:twitter_bootstrap_pagination.html.twig
+        sortable:   KnpPaginatorBundle:Pagination:sortable_link.html.twig
+
+avalanche_imagine:
+    filters:
+        platillos_imagen:
+            type:    thumbnail
+            options: { size: [400, 400], mode: inset, cache_type: public, cache_expires: '2 weeks' }
+        galeria_imagen:
+            type:    thumbnail
+            options: { size: [700, 370], mode: inset, cache_type: public, cache_expires: '2 weeks' }
+        galeria_imagen_recortar:
+            type:    thumbnail
+            options: { size: [700, 370], mode: outbound, cache_type: public, cache_expires: '2 weeks' }    
+
+inori_twitter_app:
+    file: %kernel.root_dir%/../vendor/abraham/twitteroauth/twitteroauth/twitteroauth.php
+    consumer_key: j331Eo9FIEqglu2e2waE2w
+    consumer_secret: PhZQYDS2E4Ys8dMAqwyX9VVG3lpLcKUbN0sIsa4sU0M
+    oauth_token: 179341683-1MLB4HXvvnU7ewFGI9xQgRo2R68FNxCKDRLBEyM9
+    oauth_token_secret: iE0zVv0kvUaBZrxTPLVLocaSezjosteM1DN0iVWdnQ
+
+knp_last_tweets:
+    fetcher:
+        driver: oauth
+
+parameters:
+    # dirección de correo electrónico para contacto del Blogger
+    richpolis.emails.to_email: richpolis@gmail.com
+    # Blogger máximo de comentarios recientes
+    richpolis_registros_limit: 10
+    richpolis_imagenes_limit: 50
+    richpolis_uploads: %kernel.root_dir%/../web/uploads

@@ -1,0 +1,12 @@
+<ul class="nav nav-list">
+    <li class="nav-header">Galerias</li>
+    <li {% if pagina=="galerias_oficial" %} class="active" {% endif %}><a href="{{path('backend_galerias_oficial')}}">Galerias</a></li>
+    <li {% if pagina=="galerais_recomendaciones" %} class="active" {% endif %}><a href="{{path('backend_galerias_recomendaciones')}}">Recomendaciones</a></li>
+    <li class="nav-header">Publicaciones</li>
+    <li {% if pagina=="platillos" %} class="active" {% endif %}><a href="{{path('backend_publicacion')}}">Platillos</a></li>
+    <li class="nav-header">Ubicaciones</li>
+    <li {% if pagina=="ubicaciones" %} class="active" {% endif %}><a href="{{path('backend_ubicaciones')}}">Ubicaciones</a></li>
+    <li {% if pagina=="ubicaciones_actual" %} class="active" {% endif %}><a href="{{path('backend_ubicacion_actual')}}">Ubicacion actual</a></li>
+    <li class="nav-header">Configuraciones</li>
+    <li {% if pagina=="configuraciones" %} class="active" {% endif %}><a href="{{path('backend_configuraciones')}}">Configuraciones</a></li>
+</ul>

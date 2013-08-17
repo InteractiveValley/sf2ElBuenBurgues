@@ -1,0 +1,22 @@
+{% extends "BackendBundle::backend.html.twig" %}
+
+{% block menu_horizontal %}
+    {% include 'BackendBundle:Default:menu_horizontal.html.twig' with {'pagina': 'configuraciones'} %}
+{% endblock %}
+
+{% block siderbar %}  
+    {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': 'configuraciones'} %}
+{% endblock %}
+
+{% block body %}
+<h1>Seleccionar tipo de configuracion</h1>
+<ul class="nav nav-list">
+    <li class="nav-header">Categorias</li>
+    {% for key,value in tipos %}
+            <li class="tipo-categoria" tipo="{{key}}">
+                <a href="{{path('configuraciones_new',{'tipo': key })}}">Nueva configuracion tipo: {{value}}</a>
+            </li>
+    {% endfor %}    
+    </ul>
+{% endblock %}
+

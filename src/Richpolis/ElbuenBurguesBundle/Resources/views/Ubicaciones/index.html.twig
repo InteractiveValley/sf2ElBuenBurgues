@@ -1,0 +1,82 @@
+{% extends "BackendBundle::backend.html.twig" %}
+
+{% block menu_horizontal %}
+    {% include 'BackendBundle:Default:menu_horizontal.html.twig' with {'pagina': 'ubicaciones'} %}
+{% endblock %}
+
+{% block siderbar %}  
+    {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': 'ubicaciones'} %}
+{% endblock %}
+
+{% block body %}
+    {% if app.request.page is not defined %}
+        {% set page=1 %}
+    {% else %}
+        {% set page=app.request.page %}
+    {% endif %}
+
+<h1>Ubicaciones</h1>
+
+<table class="table table-hover records_list">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Direccion</th>
+            <th>Logitud</th>
+            <th>Altitud</th>
+            <th>Createdat</th>
+            <th>Updatedat</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for entity in pagination %}
+            <tr>
+                <td><a href="{{ path('ubicaciones_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.direccion }}</td>
+                <td>{{ entity.longitude }}</td>
+                <td>{{ entity.latitude }}</td>
+                <td>{% if entity.createdAt %}{{ entity.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if entity.updatedAt %}{{ entity.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul class="nav">
+                        <li>
+                            <a class="btn btn-mini"  href="{{ path('ubicaciones_show', { 'id': entity.id }) }}" title="Mostrar registro">
+                                <i class="icon-eye-open"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="btn btn-mini"  href="{{ path('ubicaciones_edit', { 'id': entity.id }) }}" title="Editar registro">
+                                <i class="icon-edit"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="span4">    
+            <ul class="btn-group">
+                <li>
+                    <a class="btn btn-primary" href="{{ path('ubicaciones_new')}}">
+                        Nueva ubicacion
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="span4">
+            <ul class="btn-group">
+                <li>
+                    <a class="btn btn-primary" href="{{ path('ubicaciones_actual')}}">
+                        Capturar ubicacion actual
+                    </a> 
+                </li>
+            </ul>
+        </div>
+        <div class="span4">
+            <div class="navigation"> {{ knp_pagination_render(pagination) }} </div>
+        </div>   
+    </div>
+{% endblock %}

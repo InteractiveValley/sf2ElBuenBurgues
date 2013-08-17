@@ -1,0 +1,58 @@
+{% extends "BackendBundle::backend.html.twig" %}
+
+{% block menu_horizontal %}
+    {% include 'BackendBundle:Default:menu_horizontal.html.twig' with {'pagina': 'configuraciones'} %}
+{% endblock %}
+
+{% block siderbar %}  
+    {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': 'configuraciones'} %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link href="{{ asset('css/uploadify/uploadify.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/Jcrop/jquery.Jcrop.css') }}" rel="stylesheet" />
+
+    {{ form_stylesheet(edit_form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    
+    <script src="{{ asset('js/tiny_mce/tiny_mce.js') }}"></script>
+    <script src="{{ asset('js/uploadify/jquery.uploadify.min.js') }}"></script>
+    <script src="{{ asset('js/Jcrop/jquery.Jcrop.min.js') }}"></script>
+
+    {{ form_javascript(edit_form) }}
+{% endblock %}
+
+{% block body %}
+<h1>Editar configuracion "{{entity.configuracion}}"</h1>
+
+<form id="formPrincipal" action="{{ path('configuraciones_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+    {{ form_widget(edit_form) }}
+</form>
+
+    <p style="margin-top: 10px;">
+    <ul class="record_actions nav nav-pills">
+        <li>
+            <button class="btn btn-primary" onclick="$('#formPrincipal').submit();">Actualizar</button>
+        </li>
+        <li>&nbsp;</li>
+        <li>
+            <button class="btn" onclick="location.href = '{{ path('configuraciones') }}'">
+                Regresar
+            </button>
+        </li>
+        <li>&nbsp;</li>
+        <li>
+            <form action="{{ path('configuraciones_delete', { 'id': entity.id }) }}" method="post">
+                    {{ form_widget(delete_form) }}
+                    <button class="btn btn-danger" type="submit">Eliminar</button>
+                </form>
+            </li>
+        </ul>
+
+    </p>
+{% endblock %}

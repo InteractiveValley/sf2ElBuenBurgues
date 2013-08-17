@@ -1,0 +1,37 @@
+<div id="categorias-load" style="display: none;">
+    <img src="/images/gallery_loading.gif"/>
+</div> 
+{%  if anterior is defined and anterior > 0 %}
+<img src="/images/arrow_left.png" id="categorias-anterior" onclick="javascript:paginaCategorias('{{path('frontend_categorias_galerias',{'tipo':tipo_galeria})}}',{{anterior}})" />
+{% else %}
+&nbsp;
+{% endif %}
+
+{% for categoria in pagination %}
+<div class="thumb">
+    <a href="{{ path('galeria_item_show', { 'slug': categoria.slug }) }}" 
+       title="{{categoria.categoria}}"> 
+        <span class="overlay">{{categoria.categoria}}</span>
+        <img width="300" height="225" 
+             src="{{categoria.galerias[0].thumbnailWebPath}}" 
+             class="attachment-post-thumbnail wp-post-image" 
+             alt="{{categoria.categoria}}"/>																			
+    </a>
+    <h2></h2>
+</div>
+{% endfor %}
+
+{%  if siguiente is defined and siguiente > 0 %}
+<img src="/images/arrow_right.png" id="categorias-siguiente" onclick="javascript:paginaCategorias('{{path('frontend_categorias_galerias',{'tipo':tipo_galeria})}}',{{siguiente}})"/>
+{% else %}
+&nbsp;
+{% endif %}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,77 @@
+<div id="map" style="width:500px;height:380px;margin: 10px 250px;"></div>
+
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false">
+</script>
+
+<script>
+
+    {% if latitude is not defined %}
+        if (navigator.geolocation) {
+            var timeoutVal = 10 * 1000 * 1000;
+            navigator.geolocation.getCurrentPosition(
+                    displayPosition,
+                    displayError,
+                    {enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 0}
+            );
+        } else {
+            alert("El navegador no sorporta la HTML5 Geolocalizacion");
+        }
+        {% else %}
+            setTimeout(displayMap('{{latitude}}','{{longitude}}','{{direccion | raw }}'), 2000);
+        {% endif %}
+
+    function displayPosition(position) {
+        //alert("Latitude: " + position.coords.latitude + ", Longitude: " + position.coords.longitude);
+        var $latitude = position.coords.latitude;
+        var $longitude= position.coords.longitude;
+
+        setTimeout(displayMap($latitude,$longitude,"Nueva ubicacion"), 2000);
+    }
+
+    function displayMap(ltd, lgt,dir) {
+        var pos = new google.maps.LatLng(
+                ltd,
+                lgt
+                );
+        var options = {
+            zoom: 15,
+            center: pos,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map"), options);
+        var marker = new google.maps.Marker({
+            position: pos,
+            map: map,
+            title: dir
+        });
+        var contentString = dir;
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
+        google.maps.event.addListener(marker, 'click', function() {
+            infowindow.open(map, marker);
+        });
+    }
+
+    function displayError(error) {
+        var errors = {
+            1: 'Permiso denegado',
+            2: 'Posicion no disponible',
+            3: 'Timeout'
+        };
+        alert("Error: " + errors[error.code]);
+    }
+
+    function parseTimestamp(timestamp) {
+        var d = new Date(timestamp);
+        var day = d.getDate();
+        var month = d.getMonth() + 1;
+        var year = d.getFullYear();
+        var hour = d.getHours();
+        var mins = d.getMinutes();
+        var secs = d.getSeconds();
+        var msec = d.getMilliseconds();
+        return day + "." + month + "." + year + " " + hour + ":" + mins + ":" + secs + "," + msec;
+    }
+    </script>
+

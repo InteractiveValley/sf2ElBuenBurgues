@@ -1,0 +1,53 @@
+{% extends "BackendBundle::backend.html.twig" %}
+
+{% block menu_horizontal %}
+    {% include 'BackendBundle:Default:menu_horizontal.html.twig' with {'pagina': 'galerias'} %}
+{% endblock %}
+
+{% block body %}
+<h1>Galerias</h1>
+
+<table class="table table-hover records_list">
+    <thead>
+        <tr>
+            <th>Orden</th>
+            <th>Imagen</th>
+            <th>Categoria</th>
+            <th>Activo</th>
+            <th>Creado</th>
+            <th>Actualizado</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for entity in entities %}
+        <tr>
+            <td>{{ entity.posicion }}</td>
+            <td><img src="{{ entity.thumbnailWebPath }}" style="max-height: 120px; max-width: 120px;" /></td>
+            <td>{{ entity.categoria }}</td>
+            <td>{{ entity.isactive | isActive | raw }}</td>
+            <td>{% if entity.createdat %}{{ entity.createdat|date('d/m/Y H:i') }}{% endif%}</td>
+            <td>{% if entity.updatedat %}{{ entity.updatedat|date('d/m/Y H:i') }}{% endif%}</td>
+            <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('galerias_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('galerias_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<ul class="btn-group">
+  <li>
+     <a class="btn btn-primary" href="{{ path('galerias_new') }}">
+        Nuevo registro
+     </a>
+  </li>
+</ul>
+{% endblock %}

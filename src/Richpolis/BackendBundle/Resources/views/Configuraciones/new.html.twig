@@ -1,0 +1,49 @@
+{% extends "BackendBundle::backend.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link href="{{ asset('css/uploadify/uploadify.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/Jcrop/jquery.Jcrop.css') }}" rel="stylesheet" />
+
+    {{ form_stylesheet(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    
+    <script src="{{ asset('js/tiny_mce/tiny_mce.js') }}"></script>
+    <script src="{{ asset('js/uploadify/jquery.uploadify.min.js') }}"></script>
+    <script src="{{ asset('js/Jcrop/jquery.Jcrop.min.js') }}"></script>
+
+    {{ form_javascript(form) }}
+{% endblock %}
+
+{% block menu_horizontal %}
+    {% include 'BackendBundle:Default:menu_horizontal.html.twig' with {'pagina': 'configuraciones'} %}
+{% endblock %}
+
+{% block siderbar %}  
+    {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': 'configuraciones'} %}
+{% endblock %}
+
+{% block body %}
+<h1>Nueva configuracion</h1>
+
+<form action="{{ path('configuraciones_create') }}?tipo={{entity.tipoConfiguracion}}" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
+    <p style="margin-top: 10px;">
+        <ul class="record_actions">
+            <li style=" list-style: none; display: inline;">
+                <button class="btn btn-primary" type="submit">Guardar</button>
+            </li>
+            <li style=" list-style: none;  display: inline;">
+                <a class="btn" href="{{ path('configuraciones') }}">
+                    Regresar
+                </a>
+            </li>
+        </ul>
+    </p>
+</form>
+
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends "ElbuenBurguesBundle::layout.html.twig" %}
+
+{% block redes_sociales %}
+<meta property="og:title" content="El Buen Burgues" />
+<meta property="og:type" content="album" />
+<meta property="og:url" content="{{url('homepage')}}" />
+<meta property="og:image" content="{{asset('images/logo_header.jpg')}}" />
+<meta property="og:site_name" content="elbuenburgues.com" />
+<!--meta property="fb:admins" content="USER_ID1,USER_ID2"/-->
+<meta property="og:description" content="El Buen Burgués ofrece comida que hace la pequeña diferencia." />
+
+<meta name="twitter:card" value="summary">
+<meta name="twitter:url" value="{{url('homepage')}}"/>
+<meta name="twitter:title" value="El Buen Burgues">
+<meta name="twitter:description" value="El Buen Burgués ofrece comida que hace la pequeña diferencia."/>
+<meta name="twitter:image" value="{{asset('images/logo_header.jpg')}}"/>
+<meta name="twitter:site" value="@elbuenburgues"/>
+<meta name="twitter:creator" value="@richpolis"/>
+
+{% endblock %}
+
+{% block body %}
+<div id="main" role="main">
+    <section id="intro" class="slide">
+        <h1 class="row">
+            <span>Bievenidos</span>
+            {% for configuracion in configuraciones %}
+                {% if configuracion.configuracion == "mensaje-bienvenida"%}
+                    {{configuracion.texto | raw }}
+                {% endif %}
+            {% endfor %}
+        </h1>
+    </section>
+    <section id="noticias" class="row clearfix">
+        <h1><span>noticias</span></h1>
+            <div class="inner" id="tweets-contenedor">
+                {%render "ElbuenBurguesBundle:Default:lastTweets" with {'username': 'ElBuenBurguesFT'} %}        
+            </div> 
+         <div class="compartir-redes-sociales" style="width: 100%; text-align:center;">
+                             
+                            
+                            
+                            <a href="https://twitter.com/ElBuenBurguesFT" target="_blank"><img src="/images/twitter_icon.png"/></a>
+
+                             &nbsp;
+
+                            <a href="https://www.facebook.com/ElBuenBurgues" target="_blank"> <img src="/images/facebook_icon.png"/></a>
+
+                             
+        </div>          
+        </section>
+        <section id="menu" class="inner row clearfix">
+            <h1><span>Nuestro menú</span></h1>
+            <div class="diagram" id="lista-menu-contenedor">
+                
+                 {%render "ElbuenBurguesBundle:Default:platillos" %}   
+                
+            </div>
+            
+        </section>
+        <section id="galeria" class="row clearfix slide">
+                <h1><span>Galería</span></h1>
+                <div id="filter_wrapper">
+                    <div class="item_container">
+
+                    </div>
+                </div>
+                <div class="thumbs clearfix" id="thumbs-contenedor">
+                    {%render "ElbuenBurguesBundle:Default:categoriasGaleria" with {'tipo': tipo_galeria} %}
+                </div>
+        </section>
+        <section id="ubicacion" class="row slide">
+                    <h1><span>Ubicación actual</span></h1>
+                    <h2 class="subheading">Encuentranos en tiempo real</h2>
+                    <p style=" text-align: center; font-size: 44px; margin: 50px 0px;">
+                    {#<strong>Nos encontramos en:</strong> {{ubicacion.direccion | raw}}#}
+                        Proxima Apertura
+    
+                    </p>
+                    {# <div id="mapaGoogle">
+                        <div>ULTIMA VEZ ACTUALIZADO: <span class="fondo-rojo">{{ubicacion.updatedAt | date('d/M/Y g:iA', timezone="America/Mexico_City")}}</span></div>
+                        {% include 'ElbuenBurguesBundle:Default:googleMap.html.twig' with {'latitude': ubicacion.latitude,'longitude':ubicacion.longitude,'direccion':ubicacion.direccion}%}
+                        <!--div><span class="fondo-rojo">Abrir mapa en GOOGLE MAPS</span></div-->
+                        <div class="compartir-redes-sociales">
+                            compartir ubicacion: 
+                            
+                            <script type="text/javascript">
+                            var dir = window.document.URL;
+                            var dir2 = encodeURIComponent(dir);
+                            var tit = window.document.title;
+                            var tit2 = encodeURIComponent(tit);
+                            </script>
+
+                            <a href="javascript:window.location.href=('http://twitter.com/?status='+tit2+'%20'+dir+'')"><img src="/images/twitter_icon.png"/></a>
+
+                             
+
+                            <a href="javascript:window.location.href=('http://www.facebook.com/share.php?u='+dir2+'&t='+tit2+'')"> <img src="/images/facebook_icon.png"/></a>
+
+                             
+                        </div>
+                    </div> #}       
+          </section>
+          <section id="recomendaciones" class="row clearfix slide">
+                    <h1><span>Recomendaciones de la semana</span></h1>
+                    <div class="thumbs-2 clearfix" id="thumbs-2-contenedor">
+                        {%render "ElbuenBurguesBundle:Default:recomendaciones" with {'tipo': tipo_recomendaciones}%}
+                    </div>
+          </section>    
+          <section id="about" class="row slide">
+                        <h1><span>Contacto</span></h1>
+                        <div class="inner row clearfix">
+                            <div class="column grid_6">
+                                <img src="{{asset('images/logo_contacto.jpg')}}" alt="me">
+                                <div class="text" style="text-align: center;">
+                                    {% for configuracion in configuraciones %}
+                                        {% if configuracion.configuracion == "contacto"%}
+                                            {{configuracion.texto | raw }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div id="contacts" class="column grid_6">
+                                {% include 'ElbuenBurguesBundle:Default:contacto.html.twig' with {'form':form }%}
+                            </div>
+                        </div>
+          </section>
+</div>
+                <footer>
+                    <div class="row">
+                        {% for configuracion in configuraciones %}
+                            {% if configuracion.configuracion == "pie-pagina"%}
+                               {{configuracion.texto | raw }}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </footer>
+{% endblock %}

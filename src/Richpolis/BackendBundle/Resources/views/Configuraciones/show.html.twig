@@ -1,0 +1,59 @@
+{% extends "BackendBundle::backend.html.twig" %}
+
+{% block menu_horizontal %}
+    {% include 'BackendBundle:Default:menu_horizontal.html.twig' with {'pagina': 'configuraciones'} %}
+{% endblock %}
+
+{% block siderbar %}  
+    {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': 'configuraciones'} %}
+{% endblock %}
+
+{% block body %}
+
+<h1>Configuracion "{{entity.configuracion}}"</h1>
+
+<table class="record_properties table table-bordered">
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ entity.id }}</td>
+        </tr>
+        <tr>
+            <th>Configuracion</th>
+            <td>{{ entity.configuracion }}</td>
+        </tr>
+        <tr>
+            <th>Tipo configuracion</th>
+            <td>{{ entity.stringtipoconfiguracion }}</td>
+        </tr>
+        <tr>
+            <th>Valor</th>
+            <td>{{ entity.texto | raw}}</td>
+        </tr>
+        <tr>
+            <th>Slug</th>
+            <td>{{ entity.slug }}</td>
+        </tr>
+    </tbody>
+</table>
+<ul class="record_actions nav nav-pills">
+        <li>
+            <button class="btn" onclick="location.href='{{ path('configuraciones') }}'">
+                Regresar
+            </button>
+        </li>
+        <li>&nbsp;</li>
+        <li>
+            <button class="btn btn-success" onclick="location.href='{{ path('configuraciones_edit', { 'id': entity.id }) }}'">
+                Editar
+            </button>
+        </li>
+        <li>&nbsp;</li>
+        <li>
+            <form action="{{ path('configuraciones_delete', { 'id': entity.id }) }}" method="post">
+                    {{ form_widget(delete_form) }}
+                    <button class="btn btn-danger" type="submit">Eliminar</button>
+            </form>
+        </li>
+</ul>
+{% endblock %}

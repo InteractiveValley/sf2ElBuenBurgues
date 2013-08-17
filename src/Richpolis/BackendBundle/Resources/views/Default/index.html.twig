@@ -1,0 +1,41 @@
+{% extends "BackendBundle::backend.html.twig" %}
+
+{% block body %}  
+{# block de cuerpo de pagina 9 span #}
+<div class="hero-unit">
+    <h1>Bienvenidos!</h1>
+    <p>Este es un sistema de administracion de contenidos, para conocer mas al respecto favor de dar click en el siguiente boton para conocer mas sobre el.</p>
+    <p><a href="{{path('backend_navegar')}}" class="btn btn-primary btn-large">Navegar &raquo;</a></p>
+</div>
+<div class="row-fluid">
+    <div class="span4">
+        <h2>Galerias</h2>
+        <p>Administrar las galerias </p>
+        <p><a class="btn" href="{{path('backend_galerias_oficial')}}">Galerias &raquo;</a></p>
+    </div><!--/span-->
+    <div class="span4">
+        <h2>Recomendaciones</h2>
+        <p>Administrar las recomendaciones </p>
+        <p><a class="btn" href="{{path('backend_galerias_recomendaciones')}}">Recomendaciones &raquo;</a></p>
+    </div><!--/span-->
+    <div class="span4">
+        <h2>Publicaciones</h2>
+        <p>Administrar los platillos. </p>
+        <p><a class="btn" href="{{path('backend_publicacion')}}">Platillos &raquo;</a></p>
+    </div><!--/span-->
+    
+</div><!--/row-->
+<div class="row-fluid">
+  <div class="span4">
+        <h2>Ubicaciones</h2>
+        <p>Administrar las ubicaciones. </p>
+        <p><a class="btn" href="{{path('backend_ubicaciones')}}">Ubicaciones &raquo;</a></p>
+    </div><!--/span-->  
+ <div class="span4">
+        <h2>Configuracion</h2>
+        <p>Configuraciones especiales de la pagina. </p>
+        <p><a class="btn" href="{{path('backend_configuraciones')}}">Configuraciones &raquo;</a></p>
+    </div><!--/span-->
+</div><!--/row-->
+
+{% endblock %}

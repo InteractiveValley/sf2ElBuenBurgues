@@ -1,0 +1,29 @@
+<section class="knp_last_tweets">
+    {% if tweets %}
+        <ul class="tweets-lista">
+        {% for tweet in tweets %}
+            <li class="tweet-item">
+                <div class="tweet-item-contenedor">
+                <div class="tweet-item-imagen">
+                    <img src="{{ asset('images/logo_header.jpg') }}" width="60" height="60"/>
+                </div>
+                <div class="tweet-item-contenido">
+                    <span class="tweet-item-tiempo">
+                        <img src="{{asset('images/twitter1.png')}}" />
+                        {{tweet.createdAt|twitter_time}}
+                    </span>
+                        
+                    {{ tweet.text|knp_tweet_urlize }}
+                </div>    
+                </div>
+                <!--div class="tweet-item-controles">
+                    <img src="{{asset('images/twitter2.png')}}"/>
+                </div-->    
+                    
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        No tweets
+    {% endif %}
+</section>

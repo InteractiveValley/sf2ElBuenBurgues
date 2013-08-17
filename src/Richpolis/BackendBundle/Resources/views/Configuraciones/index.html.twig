@@ -1,0 +1,69 @@
+{% extends "BackendBundle::backend.html.twig" %}
+
+{% block menu_horizontal %}
+    {% include 'BackendBundle:Default:menu_horizontal.html.twig' with {'pagina': 'configuraciones'} %}
+{% endblock %}
+
+{% block siderbar %}  
+    {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': 'configuraciones'} %}
+{% endblock %}
+
+{% block body %}
+    {% if app.request.page is not defined %}
+        {% set page=1 %}
+    {% else %}
+        {% set page=app.request.page %}
+    {% endif %}
+
+<h1>Configuraciones</h1>
+
+<table class="table table-hover records_list">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Configuracion</th>
+            <th>Tipo</th>
+            <th>Texto</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for entity in pagination %}
+        <tr>
+            <td><a href="{{ path('configuraciones_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+            <td>{{ entity.configuracion }}</td>
+            <td>{{ entity.stringtipoconfiguracion }}</td>
+            <td>{{ entity.texto | raw}}</td>
+            <td>
+                <ul class="nav">
+                    <li>
+                        <a class="btn btn-mini"  href="{{ path('configuraciones_show', { 'id': entity.id }) }}" title="Mostrar registro">
+                            <i class="icon-eye-open"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-mini"  href="{{ path('configuraciones_edit', { 'id': entity.id }) }}" title="Editar registro">
+                            <i class="icon-edit"></i>
+                        </a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="row">
+        <div class="span4">    
+            <ul class="btn-group">
+                <li>
+                    <a class="btn btn-primary" href="{{ path('configuraciones_select')}}">
+                        Nueva configuracion
+                    </a>
+                </li>
+             </ul>
+        </div>
+        <div class="span4">
+            <div class="navigation"> {{ knp_pagination_render(pagination) }} </div>
+        </div>   
+</div>
+{% endblock %}

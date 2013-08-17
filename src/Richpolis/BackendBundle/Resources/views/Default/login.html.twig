@@ -1,0 +1,46 @@
+{% extends "BackendBundle::backend.html.twig" %}
+
+{% block siderbar ""%} 
+
+{% block menu_horizontal ""%}
+
+{% block body %} 
+<div class="hero-unit span5 offset1" >
+
+{% if error %}
+    <div>{{ error.message }}</div>
+{% else %}
+    <h6>Acceso a la pagina</h6>
+{% endif %}
+    
+<form class="form-signin" action="{{ path('backend_check') }}" method="post">
+    <div class="control-group">
+    <label class="control-label" for="username">Username</label>
+    <div class="controls">
+      <input type="text" id="username" name="_username" value="{{ last_username }}" />
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="password">Password</label>
+    <div class="controls">
+      <input type="password" id="password" name="_password" />
+    </div>
+  </div>
+  {#
+        Si deseas controlar la URL a la que rediriges al
+        usuario en caso de éxito (más detalles abajo)
+        <input type="hidden" name="_target_path" value="/account" />
+    #}      
+  <div class="control-group">
+    <div class="controls">
+      <button class="btn btn-primary" type="submit">login</button>
+    </div>
+  </div>
+</form>
+</div>        
+<script>
+$(document).ready(function(){
+   $("div.well").hide(); 
+});    
+</script>
+{% endblock %}

@@ -1,0 +1,49 @@
+jms_security_extra:
+    secure_all_services: false
+    expressions: true
+
+security:
+    encoders:
+        Symfony\Component\Security\Core\User\User: plaintext
+
+    role_hierarchy:
+        ROLE_ADMIN:        ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    providers:
+        in_memory:
+            memory:
+                users:
+                    admin:  { password: 12345abcde, roles: [ 'ROLE_USER' ] }
+                    richpolis: { password: D3m3s1s1, roles: [ 'ROLE_ADMIN' ] }
+
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        login:
+            pattern:  ^/backend/login$
+            security: false
+
+        secured_area:
+            pattern:    ^/backend/
+            form_login:
+                check_path: backend_check
+                login_path: backend_login
+                default_target_path: backend_homepage
+                always_use_default_target_path: true
+            logout:
+                path:   backend_logout
+                target: backend_login
+            #anonymous: ~
+            #http_basic:
+            #    realm: "Secured Demo Area"
+
+    access_control:
+        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        #
+        # You must uncomment the two following rules to restrict access to paths
+        # starting with the /_internal prefix to only localhost
+        #- { path: ^/_internal/secure, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }
+        #- { path: ^/_internal/secure, roles: ROLE_NO_ACCESS }
