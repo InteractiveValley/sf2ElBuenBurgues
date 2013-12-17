@@ -1,0 +1,99 @@
+{% extends "BackendBundle::backend.html.twig" %}
+
+{% block menu_horizontal %}
+    {% include 'BackendBundle:Default:menu_horizontal.html.twig' with {'pagina': 'galerias'} %}
+{% endblock %}
+
+{% block siderbar %}  
+<ul class="nav nav-list">
+    <li class="nav-header">Categorias</li>
+    {% for key,value in tipos %}
+    {% if key != tipo_categoria %}    
+    <li class="tipo-categoria" tipo="{{key}}">
+        <a href="{{path('categorias_por_tipo',{'tipo': key })}}">{{value}}</a>
+    </li>
+    {% else %}
+    <li class="tipo-categoria active" tipo="{{key}}">
+        <a href="#">{{value}}</a>
+    </li>
+    {% endif %}
+    {% endfor %}    
+</ul>
+{% endblock %}
+
+{% block body %}
+
+{% if app.request.page is not defined %}
+    {% set page=1 %}
+{% else %}
+    {% set page=app.request.page %}
+{% endif %}
+
+<h1>Registros {{ tipos[tipo_categoria] }}</h1>
+
+<table class="table table-hover records_list">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Categoria</th>     
+            <th>Tipo</th>
+            <th>Orden</th>
+            <th>Activa?</th>
+            <th>Creada</th>
+            <th>Actualizacion</th>
+            <th>Acc</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for entity in pagination %}
+            <tr>
+                <td><a href="{{ path('categorias_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.categoria }}</td>
+                <td>{{ entity.stringtipocategoria }}</td>
+                <td>{{ entity.posicion }}</td>
+                <td>{{ entity.isactive | isActive | raw }}</td>
+                <td>{% if entity.createdat %}{{ entity.createdat|date('d/m/Y H:i') }}{% endif%}</td>
+                <td>{% if entity.updatedat %}{{ entity.updatedat|date('d/m/Y H:i') }}{% endif%}</td>
+                <td>
+                    <ul class="nav">
+                    <li>
+                        <a class="btn btn-mini" href="{{ path('categorias_show', { 'id': entity.id }) }}" title="Mostrar registro">
+                            <i class="icon-eye-open"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-mini" href="{{ path('categorias_edit', { 'id': entity.id }) }}" title="Editar registro">
+                            <i class="icon-edit"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-mini" href="{{ path('categorias_up', { 'id': entity.id ,'page': page}) }}" title="Subir registro">
+                            <i class="icon-hand-up"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="btn btn-mini" href="{{ path('categorias_down', { 'id': entity.id, 'page': page }) }}" title="Bajar registro">
+                            <i class="icon-hand-down"></i>
+                        </a>
+                    </li>
+                </ul>    
+                </td>
+            </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="span4">    
+            <ul class="btn-group">
+                <li>
+                    <a class="btn btn-primary" href="{{ path('categorias_new',{'tipo': tipo_categoria }) }}">
+                        Nueva categoria
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="span4">
+            <div class="navigation"> {{ knp_pagination_render(pagination) }} </div>
+        </div>   
+    </div>
+{% endblock %}

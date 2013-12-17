@@ -32,7 +32,7 @@
         </h1>
     </section>
     <section id="noticias" class="row clearfix">
-        <h1><span>noticias</span></h1>
+            <h1><span>noticias</span></h1>
             <div class="inner" id="tweets-contenedor">
                 {%render "ElbuenBurguesBundle:Default:lastTweets" with {'username': 'ElBuenBurguesFT'} %}        
             </div> 
@@ -51,9 +51,16 @@
         </section>
         <section id="menu" class="inner row clearfix">
             <h1><span>Nuestro menú</span></h1>
-            <div class="diagram" id="lista-menu-contenedor">
+            <h3>
+                    {% for categoria in categoriasProductos %}
+                        <span id="categoria-{{categoria.slug}}" {% if categoriaActual.id == categoria.id %} class="active" {% endif %} onclick="javascript:loadCategoriaProductos('{{path('frontend_platillos',{'categoriaId':categoria.id})}}','categoria-{{categoria.slug}}')">
+                            {{categoria.categoria}}
+                        </span>
+                    {% endfor %}    
+            </h3>
+            <div class="diagram" id="lista-menu-contenedor" style="margin-top: 25px;">
                 
-                 {%render "ElbuenBurguesBundle:Default:platillos" %}   
+                 {% render "ElbuenBurguesBundle:Default:platillos" with { 'categoriaId': categoriaActual.id } %}   
                 
             </div>
             
@@ -125,6 +132,11 @@
                             </div>
                         </div>
           </section>
+        <figure id="interactive-valley-image">
+             <a href="mailto:mailto:rafael@interactivevalley.com">
+               <img src="{{asset('images/developedby_normal.png')}}" alt="Interactive Valley"/>
+             </a>
+        </figure>
 </div>
                 <footer>
                     <div class="row">
@@ -134,5 +146,6 @@
                             {% endif %}
                         {% endfor %}
                     </div>
+                        
                 </footer>
 {% endblock %}

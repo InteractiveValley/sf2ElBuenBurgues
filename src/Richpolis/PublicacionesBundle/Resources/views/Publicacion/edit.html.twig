@@ -20,11 +20,11 @@
 {% endblock %}
     
 {% block siderbar %}  
-    {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': 'platillos'} %}
-{% endblock %}    
+    {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': entity.categoria.slug} %}
+{% endblock %}   
 
 {% block body %}
-<h1>Editar Publicacion "{{ entity.titulo }}"</h1>
+<h1>Editar Producto "{{ entity.titulo }}"</h1>
 
 <form id="formPrincipal" action="{{ path('publicacion_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
     {{ form_widget(edit_form) }}

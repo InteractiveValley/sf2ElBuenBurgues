@@ -1,0 +1,44 @@
+{% extends "BackendBundle::backend.html.twig" %}
+
+{% block menu_horizontal %}
+    {% include 'BackendBundle:Default:menu_horizontal.html.twig' with {'pagina': 'galerias'} %}
+{% endblock %}
+
+{% block siderbar %}
+     {% if galeria == "Galerias" %}
+        {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': 'galeria_oficial'} %}
+     {% elseif galeria == "Recomendaciones" %}
+        {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': 'galeria_recomendaciones'} %}
+     {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ form_stylesheet(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ tinymce_init() }}
+    {{ form_javascript(form) }}
+{% endblock %}
+
+{% block body %}
+<h1>Nueva categoria</h1>
+
+<form action="{{ path('categorias_create') }}" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
+    <p style="margin-top: 10px;">
+        <ul class="record_actions">
+            <li style=" list-style: none; display: inline;">
+                <button class="btn btn-primary" type="submit">Guardar</button>
+            </li>
+            <li style=" list-style: none;  display: inline;">
+                <a class="btn" href="{{ path('categorias') }}">
+                    Regresar
+                </a>
+            </li>
+        </ul>
+    </p>
+</form>
+{% endblock %}

@@ -76,7 +76,7 @@
             </div>
         </header>
         {% block body %}{% endblock %}
-
+        
         {% block javascripts %}
 
         <!-- scripts concatenated and minified via ant build script-->
@@ -92,7 +92,7 @@
                 $(".thumb > a,.thumb-2 > a").hover(function() {
                      $(this).find(".overlay").fadeTo("fast", 0.7).css("z-index", 20); // This sets the opacity to 100% on hover
                 }, function() {
-                        $(this).find(".overlay").fadeTo("fast", 0.0).css("z-index", 0); // This sets the opacity back to 60% on mouseout
+                     $(this).find(".overlay").fadeTo("fast", 0.0).css("z-index", 0); // This sets the opacity back to 60% on mouseout
                 });
                 
                 $.iniciarlizarGalerias();
@@ -136,11 +136,6 @@
                 });
             }
             jQuery.iniciarCircle=function(){
-                    /*$('.tweets-lista').cycle({ 
-                        fx:      'scrollDown', 
-                        timeout: 6000, 
-                        delay:  -2000
-                    });*/
                     $('ul.tweets-lista li:first-child').slideUp("slow",function(){
                         $('ul.tweets-lista').append($(this).slideDown("fast"));
                     });
@@ -170,3 +165,4 @@
         {% endblock %}
    </body>
 </html>
+l>

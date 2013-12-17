@@ -3,7 +3,7 @@
 </div>  
 
 {%  if anterior is defined and anterior > 0 %}
-<img src="/images/arrow_left.png" id="platillos-anterior" onclick="javascript:paginaPlatillos('{{path('frontend_platillos')}}',{{anterior}})"/>
+<img src="/images/arrow_left.png" id="platillos-anterior" onclick="javascript:paginaPlatillos('{{path('frontend_platillos',{'categoriaId':pagination[0].categoria.id})}}',{{anterior}})"/>
 {% else %}
 &nbsp;
 {% endif %}
@@ -24,7 +24,7 @@
     </ul>
 
 {%  if siguiente is defined and siguiente > 0 %}
-    <img src="/images/arrow_right.png" id="platillos-siguiente" onclick="javascript:paginaPlatillos('{{path('frontend_platillos')}}',{{siguiente}})"/>
+    <img src="/images/arrow_right.png" id="platillos-siguiente" onclick="javascript:paginaPlatillos('{{path('frontend_platillos',{'categoriaId':pagination[0].categoria.id})}}',{{siguiente}})"/>
 {% else %}
     &nbsp;
 {% endif %}

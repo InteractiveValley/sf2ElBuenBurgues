@@ -1,0 +1,458 @@
+{% extends "BackendBundle::backend.html.twig" %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="{{ asset('css/fileuploader.css') }}" type="text/css" media="all" />
+<link rel="stylesheet" href="{{ asset('css/prettyPhoto.css') }}" type="text/css" media="all" />
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent()}}
+    <script src="{{ asset('js/jquery.prettyPhoto.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/sfrichpolis.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/fileuploader.js') }}" type="text/javascript"></script>
+{% endblock %}
+    
+{% block javascript_adicional %} 
+<script>
+  $(function () {
+   $('#tabCategoriasGaleria a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    })
+  })
+</script>
+<script>
+    function createUploader(){
+    var uploader = new qq.FileUploader({
+            element: document.getElementById('upload'),
+            template: '{% include "BackendBundle:Default:templateUploader.html.twig" %}',
+            action: '{{ path('galerias_upload',{ 'categoria_id': entity.id }) }}',
+            params: { },
+            onComplete: function(id, file, responseJson){
+                    $.get("{{ path('galerias_galeria',{'categoria':entity.id,'isActive': true })}}",
+                    {},
+                    function(data)
+                    {
+                        $("#lista_imagenes").html(data);
+                        inicializarGaleria();
+                        $('#status').removeClass("loading");
+                        $('#status').addClass("success");
+                    });
+
+                },
+            onSubmit: function(id, fileName){
+                },
+            onProgress: function(id, fileName){
+                    $('#status').addClass("success");
+                    $('#status').addClass("loading");
+                }
+            });
+
+    }
+    window.onload = createUploader;
+</script>
+<script>
+    function eliminar(idImg,url){
+        var imagen=$("#image-"+idImg);
+        var inputText=$("#field-eliminar");
+        $(".image-dialog").attr({src:imagen.attr("src"),id:idImg});
+        inputText.val(url);
+        //$( "#confimarFormModal" ).modal( "show" );
+    }
+    
+    function activar(idImg,url){
+        var imagen=$("#image-"+idImg);
+        var inputText=$("#field-activar");
+        $(".image-dialog").attr({src:imagen.attr("src"),id:idImg});
+        inputText.val(url);
+        //$( "#confirmarActivarFormModal" ).modal( "show" );
+    }
+
+    function titularizar(idImg){
+        var imagen=$("#image-"+idImg);
+        var $ImgTitulo=$("#field-titulo");
+        var $ImgDescripcion=$("#field-contenido");
+        var $ImgUrl=$("#field-url");
+        $(".image-dialog").attr({src:imagen.attr("src"),id:idImg});
+        $ImgTitulo.val(imagen.attr("title"));
+        $ImgDescripcion.val(imagen.attr("descripcion"));
+        $ImgUrl.val(imagen.attr("url"));
+       
+        //$( "#editarFormModal" ).modal( "show" );
+    }
+    function updateRegistroGaleria(Id,Title,Description){
+        $('#image-loader').show();
+        var url='{{path('galerias_update_registro')}}';
+        $.post(url,
+            {'id':Id,'titulo':Title,'contenido':Description},
+            function(data){
+                 setTimeout(function(){
+                        $('#image-loader').hide();
+                 }, 1000);
+                 $("#registro-"+Id).html(data);
+                 inicializarGaleria();
+            });
+    }
+
+    function ajaxRegistroEdition(url){
+       $.post(url,
+       {},
+       function(data){
+           alert(data)
+          $("#lista_imagenes").html(data);
+       });
+    }
+    
+    function cambiarTipoCategoria( $item ,$tipo) {
+	$item.fadeOut(function() {
+            $('#image-loader').show();
+            var url='{{path('galerias_cambiar_tipo_categoria')}}';
+            $.get(url,{'id':$item.attr('id'),'tipo':$tipo.attr('tipo')},
+                function(data){
+                    if(data.ok="ok"){
+                        setTimeout(function(){
+                            $('#image-loader').hide();
+                        }, 1000);
+                        inicializarGaleria();
+                    }else{
+                        $('#image-loader').hide();
+                        alert("No se pudo cambiar de tipo de categoria")
+                        $item.fadeIn();
+                    }
+                     
+                });
+	});
+    }
+    
+    function cambiarArchivoCategoria( $item ,$archivo) {
+	$item.fadeOut(function() {
+            $('#image-loader').show();
+            var url='{{path('galerias_cambiar_archivo_categoria')}}';
+            $.get(url,{'id':$item.attr('id'),'categoria':$archivo.attr('categoria')},
+                function(data){
+                    if(data.ok="ok"){
+                        setTimeout(function(){
+                            $('#image-loader').hide();
+                        }, 1000);
+                        inicializarGaleria();
+                    }else{
+                        $('#image-loader').hide();
+                        alert("No se pudo cambiar al archivo de categoria")
+                        $item.fadeIn();
+                    }
+                     
+                });
+	});
+    }
+
+    function guardarEditarFormModal(){
+        var bValid = true;
+        var fieldTitle=$("#field-titulo"),
+            fieldDescription=$("#field-contenido");
+        bValid=(fieldTitle.val().length>0 && fieldTitle.val()!="Titulo de Imagen")?true:false;
+        /*bValid=(fieldDescription.val().length>0 && fieldDescription.val()!="Descripcion")?true:false;*/
+        if ( bValid ) {
+            updateRegistroGaleria(
+               $(".image-dialog").attr("id"), 
+               fieldTitle.val(),
+               fieldDescription.val()
+        );
+	$("#editarFormModal").modal( "hide" );
+       } 
+    }
+
+    function avanzadaEditarFormModal(){
+        location.href=$("#field-url").val();
+    }
+    
+    function eliminarConfirmarFormModal(){
+        var url=$("#field-eliminar").val();
+        $.post(url,{},function(data){
+          if(data.ok=="ok"){
+            $("#registro-"+data.id).fadeOut("fast",function(){
+                $(this).remove();
+            });
+          }else{
+            alert("El registro no pudo ser eliminado");
+          }
+        });
+	$("#confirmarFormModal").modal( "hide" );
+    }
+    
+    function activarConfirmarFormModal(){
+        var url=$("#field-activar").val();
+        $.post(url,{},function(data){
+          if(data.ok=="ok"){
+            $("#registro-"+data.id).fadeOut("fast",function(){
+                $("#gallery").append(data.html);
+            });
+          }else{
+            alert("El registro no se pudo activar");
+          }
+        });
+	$("#confirmarActivarFormModal").modal( "hide" );
+    }
+    
+    
+    
+    function inicializarGaleria(){
+        $.configPrettyPhoto();
+    
+        var $gallery = $( "#gallery" ),
+        $trash = $( "#papelera" );
+   
+        $gallery.sortable({
+                handle: '.image-sorteable',
+                placeholder: "ui-state-highlight",
+                update: function(){
+                    $('#image-loader').show();
+                    var order = $gallery.sortable('serialize');
+                    $.post('{{path('categorias_ordenar')}}?'+order,
+                     {'categoria':'{{entity.id}}'},
+                     function(data){
+                       $('#image-loader').hide();
+                    });
+                }
+             });
+
+        $gallery.disableSelection();
+
+        $trash.droppable({
+          accept: "#gallery > li,#gallery_para_aprobar > li",
+          activeClass: "ui-state-default",
+          hoverClass: "ui-state-highlight",
+          drop: function( event, ui ) {
+            ui.draggable.find(".eliminar-item").click();
+          }
+        });
+
+        $("li.tipo-categoria").each(function(){
+           var $tipo=$(this);
+           $tipo.droppable({
+                accept: "#gallery > li",
+                activeClass: "ui-state-default",
+                hoverClass: "ui-state-highlight",
+                drop: function( event, ui ) {
+                    cambiarTipoCategoria(ui.draggable,$tipo);
+                }
+           }); 
+        });
+
+        $("li.archivo-categoria").each(function(){
+           var $tipo=$(this);
+           $tipo.droppable({
+                accept: "#gallery > li",
+                activeClass: "ui-state-default",
+                hoverClass: "ui-state-highlight",
+                drop: function( event, ui ) {
+                    cambiarArchivoCategoria(ui.draggable,$tipo);
+                }
+           }); 
+        });
+    }
+    
+    
+    
+$(function() {
+    inicializarGaleria();
+});
+</script>
+{% endblock %}
+
+{% block menu_horizontal %}
+    {% include 'BackendBundle:Default:menu_horizontal.html.twig' with {'pagina': 'galerias'} %}
+{% endblock %}
+
+{% block siderbar %}  
+<ul class="nav nav-list">
+    <li class="nav-header">Galerias</li>
+    {% for key,value in tipos %}
+    {% if key != entity.tipocategoria %}    
+    <li class="tipo-categoria" tipo="{{key}}">
+        <a href="{{path('categorias_show_tipo',{'tipo': key })}}">{{value}}</a>
+    </li>
+    {% else %}
+    <li class="tipo-categoria active" tipo="{{key}}">
+        <a href="#">{{value}}</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+    <li class="nav-header">Papelera</li>
+    <li id="papelera"><img src="{{asset('images/trash_grande.png')}}"/></li>
+    <li class="nav-header">Archivos</li>
+    {% for cat in categorias %}
+    <li class="archivo-categoria" categoria="{{cat.id}}">
+        <a href="{{path('categorias_show',{'id':cat.id})}}">{{cat.categoria}}</a>
+    </li>
+    {% else %}
+     <li>Sin mas galerias</li>   
+    {% endfor %}
+    
+</ul>
+{% endblock %}
+
+{% block body %}
+<h1>Galeria: {{entity.stringtipocategoria}}</h1>
+<ul class="nav nav-tabs" id="tabCategoriasGaleria">
+  <li class="active"><a href="#galeria">Imagenes</a></li>
+  <li><a href="#aprobar_imagenes">Inactivas</a></li>
+  <li><a href="#sistema">Sistema</a></li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane  active" id="galeria">
+       <div id="lista_imagenes" style=" min-height: 400px;">
+         {% render "CategoriasGaleriaBundle:Categorias:galeria" with {'categoria': entity.id, 'isActive': true } %}
+       </div>
+       <div id="upload" style="margin: 30px 150px;">
+           <!--a href="{{path('galerias_new',{'categoria': entity.id })}}">
+               Agregar archivos
+           </a-->
+       </div>
+       Extenciones disponibles:   "jpeg","png","gif","jpg"
+     <!--List Files-->
+     <ul id="files" ></ul>
+    <div class="clear"></div>
+   {# use_javascript("fileuploader.js") #}
+     <div id="upload" style="margin: 30px 150px;">
+           <a href="{{path('galerias_new',{'categoria': entity.id ,'tipoArchivo':2})}}">
+               Agregar videos
+           </a>
+       </div>       
+  </div>
+  <div class="tab-pane" id="aprobar_imagenes">
+      <div id="lista_imagenes_aprobar" style=" min-height: 400px;">
+          {% render "CategoriasGaleriaBundle:Categorias:galeria" with {'categoria': entity.id, 'isActive': false } %}
+      </div>
+  </div>
+  <div class="tab-pane" id="sistema">
+        <table class="record_properties table table-bordered">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ entity.id }}</td>
+                    <th>Categoria</th>
+                    <td>{{ entity.categoria }}</td>
+                </tr>
+                <tr>
+                    <th>Tipo</th>
+                    <td>{{ entity.stringtipocategoria }}</td>
+                    <th>Posicion</th>
+                    <td>{{ entity.posicion }}</td>
+                </tr>
+                <tr>
+                    <th>Activa?</th>
+                    <td>{{ entity.isactive | isActive | raw }}</td>
+                    <th>Es categoria?</th>
+                    <td>{{ entity.iscategoria | isActive | raw }}</td>
+                </tr>
+                <tr>
+                    <th>Creada</th>
+                    <td>{{ entity.createdat|date('d/m/Y H:i') }}</td>
+                    <th>Actualizada</th>
+                    <td>{{ entity.updatedat|date('d/m/Y H:i') }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>      
+</div>
+
+
+<ul class="record_actions nav nav-pills">
+        <li>
+            <button class="btn" onclick="location.href='{{ path('categorias') }}'">
+                Regresar
+            </button>
+        </li>
+        <li>&nbsp;</li>
+        <li>
+            <button class="btn btn-success" onclick="location.href='{{ path('categorias_edit', { 'id': entity.id }) }}'">
+                Editar
+            </button>
+        </li>
+        <li>&nbsp;</li>
+        <li>
+            <form action="{{ path('categorias_delete', { 'id': entity.id }) }}" method="post">
+                    {{ form_widget(delete_form) }}
+                    <button class="btn btn-danger" type="submit">Eliminar</button>
+            </form>
+        </li>
+</ul>
+
+<!-- Modal -->
+<div id="editarFormModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="editarModalLabel">Editar registro</h3>
+  </div>
+  <div class="modal-body">
+    <div style="float: right; height: 120px;">
+            <img class="image-dialog" src="" id=""/>
+    </div>
+
+    <p>Indique el titulo y/o descripcion</p>
+    <div style="clear: both;"></div>
+    <div style="padding-top: 30px;">
+            <div class="control-group">
+                <label for="field-titulo">Titulo</label>
+                <div class="controls">
+                    <input type="text" name="field-titulo" value="00071.jpg" id="field-titulo" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="field-contenido">Contenido</label>
+                <div class="controls">
+                    <textarea name="field-contenido" id="field-contenido"></textarea>
+                </div>
+            </div>
+            <input name="field-url" id="field-url" type="hidden" value=""/>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+    <button class="btn btn-primary" onclick="javascript:guardarEditarFormModal();">Guardar</button>
+    <button class="btn" onclick="javascript:avanzadaEditarFormModal();">Avanzado</button>
+  </div>
+</div>
+
+<div id="confirmarFormModal"  class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Confimar eliminar registro</h3>
+  </div>
+  <div class="modal-body">
+    <div style="float: right; height: 120px;">
+            <img class="image-dialog" src="" id=""/>
+        </div>
+        <div style="clear: both;"></div>
+        <p style="margin-top:20px;">¿Confirmar eliminar el siguiente registro?</p>
+        <input id="field-eliminar" type="hidden" value=""/>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+    <button class="btn btn-danger" onclick="javascript:eliminarConfirmarFormModal();">Eliminar</button>
+  </div>
+</div>
+
+<div id="confirmarActivarFormModal"  class="modal hide fade">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Confirmar activar registro</h3>
+  </div>
+  <div class="modal-body">
+    <div style="float: right; height: 120px;">
+            <img class="image-dialog" src="" id=""/>
+        </div>
+        <div style="clear: both;"></div>
+        <p style="margin-top:20px;">¿Confirmar activar el registro?</p>
+        <input id="field-activar" type="hidden" value=""/>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+    <button class="btn btn-success" onclick="javascript:activarConfirmarFormModal();">Activar</button>
+  </div>
+</div>
+
+{% endblock %}
+

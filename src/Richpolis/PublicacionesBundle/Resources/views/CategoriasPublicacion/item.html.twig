@@ -1,0 +1,38 @@
+<h5>{{ entity.tituloCorto }}</h5>
+<img id="image-{{entity.id}}" 
+     entity="{{entity.id}}" 
+     src="{{ entity.thumbnailWebPath}}" 
+     class="image-sorteable" 
+     title="{{entity.titulo}}" 
+     descripcion="{{ entity.descripcion }}" 
+     url="{{ path('galerias_edit',{ 'id' : entity.id })}}"
+     style="max-width: 120px; max-height: 120px;" 
+     />
+<p>
+    <button style="float: left;"
+            type="button"
+            data-target="#editarFormModal" 
+            class="btn editar-item" 
+            data-toggle="modal" 
+            onclick="javascript:titularizar('{{entity.id}}')">
+        <i class="icon-edit"></i>
+    </button>
+    {% if entity.isactive==false %}
+    <button style="float: left;"
+            type="button"
+            data-target="#confirmarActivarFormModal" 
+            class="btn activar-item" 
+            data-toggle="modal" 
+            onclick="javascript:activar('{{entity.id}}','{{path('galerias_activar',{'id':entity.id})}}')">
+        <i class="icon-thumbs-up"></i>
+    </button>
+    {% endif %}    
+        
+    <button style="float: right;" type="button"
+            data-target="#confirmarFormModal" 
+            class="btn eliminar-item" 
+            data-toggle="modal" 
+            onclick="javascript:eliminar('{{entity.id}}','{{ path('galerias_delete_registro',{'id': entity.id})}}')">
+        <i class="icon-remove"></i>
+    </button>
+</p>

@@ -5,11 +5,11 @@
 {% endblock %}
 
 {% block siderbar %}  
-    {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': 'platillos'} %}
+    {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': entity.categoria.slug} %}
 {% endblock %}    
 
 {% block body %}
-<h1>Platillo "{{entity.titulo}}"</h1>
+<h1>Producto "{{entity.titulo}}"</h1>
 
 <table class="record_properties table table-bordered">
     <tbody>

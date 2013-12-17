@@ -3,6 +3,8 @@
 namespace Richpolis\PublicacionesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Richpolis\BackendBundle\Utils\Richsys as RpsStms;
+use Richpolis\PublicacionesBundle\Entity\CategoriasPublicacion;
 
 /**
  * Publicacion
@@ -56,6 +58,13 @@ class Publicacion
      * @ORM\Column(name="posicion", type="integer", nullable=false)
      */
     private $posicion;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="slug", type="string", length=255)
+     */
+    private $slug;
 
     /**
      * @var boolean
@@ -78,8 +87,18 @@ class Publicacion
      */
     private $updatedAt;
     
+    /**
+     * @var \CategoriasPublicacion
+     *
+     * @ORM\ManyToOne(targetEntity="CategoriasPublicacion", inversedBy="publicaciones" )
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="categoria_id", referencedColumnName="id")
+     * })
+     */
+    private $categoria;
+    
     public function __construct() {
-       $this->isActive        =   true;
+       $this->isActive  =   true;
     }
     
     public function __toString() {
@@ -258,17 +277,40 @@ class Publicacion
         return $this->updatedAt;
     }
     
+    
+    /**
+     * Set categoria
+     *
+     * @param CategoriasPublicacion $categoria
+     * @return Publicacion
+     */
+    public function setCategoria(CategoriasPublicacion $categoria = null)
+    {
+        $this->categoria = $categoria;
+    
+        return $this;
+    }
+
+    /**
+     * Get categoria
+     *
+     * @return CategoriasPublicacion 
+     */
+    public function getCategoria()
+    {
+        return $this->categoria;
+    }
+    
     /*
      * Slugable
      */
     
     /**
     * @ORM\PrePersist
-    * @ORM\PreUpdate
     */
     public function setSlugAtValue()
     {
-        $this->slug = \Richpolis\BackendBundle\Utils\Richsys::slugify($this->getTitulo());
+        $this->slug = RpsStms::slugify($this->getTitulo());
     }
     
     /*
@@ -480,26 +522,50 @@ class Publicacion
     }
 
     public function getDescripcionHtml(){
-       $traduce=array( 'Á'=>'&Aacute;',
-                      'á'=>'&aacute;',
-                      'É'=>'&Eacute;',
-                      'é'=>'&eacute;',
-                      'Í'=>'&Iacute;',
-                      'í'=>'&iacute;',
-                      'Ó'=>'&Oacute;',
-'ó'=>'&oacute;',
-'Ú'=>'&Uacute;',
-'ú'=>'&uacute;',
-'Ü'=>'&Uuml;',
-'ü'=>'&uuml;',
-'Ṅ'=>'&Ntilde;',
-'ñ'=>'&ntilde;',
-'&'=>'&amp;',
-'<'=>'&lt;',
-'>'=>'&gt;',
-"'"=>"\'");
+       $traduce=array('Á'=>'&Aacute;',
+                    'á'=>'&aacute;',
+                    'É'=>'&Eacute;',
+                    'é'=>'&eacute;',
+                    'Í'=>'&Iacute;',
+                    'í'=>'&iacute;',
+                    'Ó'=>'&Oacute;',
+                    'ó'=>'&oacute;',
+                    'Ú'=>'&Uacute;',
+                    'ú'=>'&uacute;',
+                    'Ü'=>'&Uuml;',
+                    'ü'=>'&uuml;',
+                    'Ṅ'=>'&Ntilde;',
+                    'ñ'=>'&ntilde;',
+                    '&'=>'&amp;',
+                    '<'=>'&lt;',
+                    '>'=>'&gt;',
+                    "'"=>"\'");
        $sale=strtr( $this->getDescripcion() , $traduce );
        return $sale;
 
+    }
+
+    /**
+     * Set slug
+     *
+     * @param string $slug
+     *
+     * @return Publicacion
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get slug
+     *
+     * @return string 
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 }

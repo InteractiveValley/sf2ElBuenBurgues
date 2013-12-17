@@ -5,7 +5,20 @@
 {% endblock %}
 
 {% block siderbar %}  
-    {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': 'platillos'} %}
+<ul class="nav nav-list">
+    <li class="nav-header">Productos</li>
+    {% for categoria in categorias %}
+    {% if categoria.id != categoria_actual.id %}    
+    <li class="categoria-publicacion" categoria="{{categoria.id}}">
+        <a href="{{path('publicacion_por_categoria',{'categoria': categoria.id })}}">{{categoria}}</a>
+    </li>
+    {% else %}
+    <li class="categoria-publicacion active" categoria="{{categoria.id}}">
+        <a href="#">{{categoria}}</a>
+    </li>
+    {% endif %}
+    {% endfor %}    
+</ul>
 {% endblock %}    
 
 {% block body %}
@@ -17,13 +30,13 @@
 {% endif %}
 
 
-<h1>Platillos</h1>
+<h1>{{categoria_actual}}</h1>
 
 <table class="table table-hover records_list">
     <thead>
         <tr>
-            <th>Orden</th>
-            <th>Titulo</th>
+            <!--th>Orden</th-->
+            <th>Producto</th>
             <th>Descripcion</th>
             <th>Imagen</th>
             <th>Activo</th>
@@ -35,15 +48,15 @@
     <tbody>
     {% for entity in pagination %}
         <tr class="list-registro">
-            <td class="list-registro-posicion"><a href="{{ path('publicacion_show', { 'id': entity.id }) }}">{{ entity.posicion }}</a></td>
-            <td class="list-registro-titulo">{{ entity.titulo }}</td>
+            <td class="list-registro-posicion"><a href="{{ path('publicacion_show', { 'id': entity.id }) }}">{{ entity.titulo }}</a></td>
+            <!--td class="list-registro-titulo">{{ entity.titulo }}</td-->
             <td class="list-registro-descripcion">{{ entity.descripcion | raw }}</td>
             <td class="list-registro-imagen">
                 <img src="{{ entity.thumbnailWebPath }}" style="max-height: 120px; max-width: 120px;"/>
             </td>
             <td>{{ entity.isactive | isActive | raw }}</td>
-            <td>{% if entity.createdat %}{{ entity.createdat|date('d-m-Y H:i:s') }}{% endif%}</td>
-            <td>{% if entity.updatedat %}{{ entity.updatedat|date('d-m-Y H:i:s') }}{% endif%}</td>
+            <td>{% if entity.createdat %}{{ entity.createdat|date('d/m/Y H:i') }}{% endif%}</td>
+            <td>{% if entity.updatedat %}{{ entity.updatedat|date('d/m/Y H:i') }}{% endif%}</td>
             <td>
                 <ul class="nav">
                     <li>
@@ -57,14 +70,15 @@
                         </a>
                     </li>
                     <li>
-                        <a class="btn btn-mini" href="{{ path('publicacion_up', { 'id': entity.id ,'page': page}) }}" title="Subir registro">
+                        <a class="btn btn-mini" href="{{ path('publicacion_down', { 'id': entity.id, 'page': page }) }}" title="Bajar registro">
                             <i class="icon-hand-up"></i>
                         </a>
                     </li>
                     <li>
-                        <a class="btn btn-mini" href="{{ path('publicacion_down', { 'id': entity.id, 'page': page }) }}" title="Bajar registro">
+                        <a class="btn btn-mini" href="{{ path('publicacion_up', { 'id': entity.id ,'page': page}) }}" title="Subir registro">
                             <i class="icon-hand-down"></i>
                         </a>
+                        
                     </li>
                 </ul>
             </td>
@@ -76,8 +90,8 @@
         <div class="span4">    
             <ul class="btn-group">
                 <li>
-                    <a class="btn btn-primary" href="{{ path('publicacion_new' )}}">
-                        Nueva platillo
+                    <a class="btn btn-primary" href="{{ path('publicacion_new')}}">
+                        Nuevo producto - {{categoria_actual}}
                     </a>
                 </li>
              </ul>

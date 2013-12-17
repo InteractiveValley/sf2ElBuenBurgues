@@ -18,6 +18,57 @@ use Richpolis\BackendBundle\Form\ContactoType;
  */
 class DefaultController extends Controller {
     
+    private $categorias = null;
+    protected function getFilters()
+    {
+        $filters=$this->get('session')->get('filters', array());
+        return $filters;
+    }
+    
+    protected function setFilters($filters){
+        $this->get('session')->set('filters',$filters);
+    }
+
+    protected function getCategoriaDefault(){
+        $filters = $this->getFilters();
+        $categoria = null;
+        if(isset($filters['publicaciones'])){
+            $this->getCategoriasPublicacion();
+            foreach($this->categorias as $cat){
+                if($cat->getId()==$filters['publicaciones']){
+                    $categoria= $cat;
+                    break;
+                }
+            }
+            return $categoria;
+        }else{
+            $this->getCategoriasPublicacion();
+            return $this->categorias[0];
+        }
+    }
+
+    protected function getCategoriasPublicacion(){
+        $em = $this->getDoctrine()->getManager();
+        if($this->categorias == null){
+            $this->categorias = $em->getRepository('PublicacionesBundle:CategoriasPublicacion')
+                                   ->getCategoriasPublicacionActivas();
+        }
+        return $this->categorias;
+    }
+
+    protected function getCategoriaActual($categoriaId){
+        $categorias= $this->getCategoriasPublicacion();
+        $categoriaActual=null;
+        foreach($categorias as $categoria){
+            if($categoria->getId()==$categoriaId){
+                $categoriaActual=$categoria;
+                break;
+            }
+        }
+        return $categoriaActual;
+    }
+    
+    
     /**
      * Lists all Ubicaciones entities.
      *
@@ -31,6 +82,12 @@ class DefaultController extends Controller {
         $ubicacion = $em->getRepository('ElbuenBurguesBundle:Ubicaciones')->getUltimaUbicacion();
         $configuraciones = $em->getRepository('BackendBundle:Configuraciones')->findAll();
         
+        $categoriasProductos = $em->getRepository('PublicacionesBundle:CategoriasPublicacion')
+                                  ->getCategoriasPublicacionActivas();
+        if($this->categorias == null)
+            $this->categorias = $categoriasProductos;
+            
+        
         $tipo_galeria = \Richpolis\CategoriasGaleriaBundle\Entity\Categorias::$GALERIA;
         $tipo_recomendaciones = \Richpolis\CategoriasGaleriaBundle\Entity\Categorias::$RECOMENDACIONES;
         
@@ -42,6 +99,8 @@ class DefaultController extends Controller {
             'configuraciones' => $configuraciones,
             'tipo_galeria' => $tipo_galeria,
             'tipo_recomendaciones' =>  $tipo_recomendaciones,
+            'categoriasProductos'=>$categoriasProductos,
+            'categoriaActual'=> $this->getCategoriaDefault(),
             'form' => $form->createView(),
         );
     }
@@ -160,20 +219,33 @@ class DefaultController extends Controller {
     /**
      * Lista los platillos.
      *
-     * @Route("/platillos/", name="frontend_platillos")
+     * @Route("/platillos/{categoriaId}", name="frontend_platillos")
      */
-    public function platillosAction()
+    public function platillosAction(Request $request,$categoriaId)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         
-        $query = $em->getRepository("PublicacionesBundle:Publicacion")->getQueryPublicacionActivas();
+        $filters = $this->getFilters();
+        
+        if(!isset($filters['publicaciones'])){
+            $filters['publicaciones']=$this->getCategoriaDefault();
+            $this->setFilters($filters);
+        }
+            
+        if($filters['publicaciones']!=$categoriaId){
+            $filters['publicaciones']=$categoriaId;
+            $this->setFilters($filters);
+        }
+                
+        $query = $em->getRepository("PublicacionesBundle:Publicacion")
+                    ->getQueryPublicacionPorCategoriaActivas($filters['publicaciones']);
 
         $paginator = $this->get('knp_paginator');
         
         $pagination = $paginator->paginate(
             $query,
-            $this->getRequest()->query->get('page', 1),
-            4
+            $request->query->get('page', 1),
+            7
         );
         
         $datosPagina=$pagination->getPaginationData();

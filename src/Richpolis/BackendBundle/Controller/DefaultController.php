@@ -79,11 +79,27 @@ class DefaultController extends Controller
     }
     
     /**
-     * @Route("/publicacion", name="backend_publicacion")
+     * @Route("/productos/mini/burgues", name="backend_publicacion_mini_burgues")
      */
-    public function publicacionAction()
+    public function publicacionMiniBurguesAction()
     {
-        return $this->forward('PublicacionesBundle:Publicacion:index');
+        return $this->forward('PublicacionesBundle:Publicacion:publicacionesMiniBurgues');
+    }
+    
+    /**
+     * @Route("/productos/shakes", name="backend_publicacion_shakes")
+     */
+    public function publicacionShakesAction()
+    {
+        return $this->forward('PublicacionesBundle:Publicacion:publicacionesSkahes');
+    }
+    
+    /**
+     * @Route("/productos/fries", name="backend_publicacion_fries")
+     */
+    public function publicacionFriesAction()
+    {
+        return $this->forward('PublicacionesBundle:Publicacion:publicacionesFries');
     }
     
     /**

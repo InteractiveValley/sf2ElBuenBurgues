@@ -6,12 +6,14 @@
 
 
 {% block body %}
-<h1>Seleccionar tipo de publicacion</h1>
+<h1>Seleccionar categoria de producto</h1>
 <ul class="nav nav-list">
-    <li class="nav-header">Publicaciones</li>
-    {% for key,value in tipos %}
-    <li class="tipo-publicacion" tipo="{{key}}">
-        <a href="{{path('publicacion_por_tipo',{'tipo': key })}}">{{value}}</a>
+    <li class="nav-header">Productos</li>
+    {% for categoria in categorias %}
+    <li class="categoria-publicacion" categoria="{{categoria.id}}">
+        <a href="{{path('publicacion_por_categoria',{'categoria': categoria.id })}}">
+        	{{categoria}}
+        </a>
     </li>
     {% endfor %}    
 </ul>

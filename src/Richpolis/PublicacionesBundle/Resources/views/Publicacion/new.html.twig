@@ -24,11 +24,11 @@
 {% endblock %}
 
 {% block siderbar %}  
-    {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': 'platillos'} %}
+    {% include 'BackendBundle:Default:siderbar.html.twig' with {'pagina': entity.categoria.slug} %}
 {% endblock %}        
     
 {% block body %}
-<h1>Nuevo Platillo</h1>
+<h1>Nuevo producto</h1>
 
 <form action="{{ path('publicacion_create') }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
